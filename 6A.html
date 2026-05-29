@@ -102,8 +102,8 @@
                 <div id="content1" style="display: none;">
                     <!-- Tabs -->
                     <div class="flex gap-2 mb-6">
-                        <button id="tabPitching1" class="tab-button active px-6 py-2 rounded-lg font-semibold">Pitching</button>
-                        <button id="tabHitting1" class="tab-button inactive px-6 py-2 rounded-lg font-semibold">Hitting</button>
+                        <button id="tabPitching1" class="tab-button inactive px-6 py-2 rounded-lg font-semibold">Pitching</button>
+                        <button id="tabHitting1" class="tab-button active px-6 py-2 rounded-lg font-semibold">Hitting</button>
                     </div>
 
                     <!-- Search -->
@@ -113,7 +113,7 @@
                     </div>
 
                     <!-- Pitching Table -->
-                    <div id="pitchingTab1" class="bg-white rounded-lg shadow-sm overflow-hidden mb-6">
+                    <div id="pitchingTab1" class="bg-white rounded-lg shadow-sm overflow-hidden mb-6" style="display:none;">
                         <div class="overflow-x-auto">
                             <table class="min-w-full divide-y divide-gray-200 voting-table">
                                 <thead class="bg-gray-50">
@@ -140,7 +140,7 @@
                     </div>
 
                     <!-- Hitting Table -->
-                    <div id="hittingTab1" class="bg-white rounded-lg shadow-sm overflow-hidden mb-6" style="display:none;">
+                    <div id="hittingTab1" class="bg-white rounded-lg shadow-sm overflow-hidden mb-6">
                         <div class="overflow-x-auto">
                             <table class="min-w-full divide-y divide-gray-200 voting-table">
                                 <thead class="bg-gray-50">
@@ -152,6 +152,7 @@
                                         <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat1="Batting average" style="cursor:pointer;user-select:none;" title="Click to sort">AVG <span class="sort-arrow">▲</span></th>
                                         <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat1="On-base percentage" style="cursor:pointer;user-select:none;" title="Click to sort">OBP <span class="sort-arrow">▲</span></th>
                                         <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat1="Slugging percentage" style="cursor:pointer;user-select:none;" title="Click to sort">SLG <span class="sort-arrow">▲</span></th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat1="OPS" style="cursor:pointer;user-select:none;" title="Click to sort">OPS <span class="sort-arrow">▲</span></th>
                                         <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat1="Total hits" style="cursor:pointer;user-select:none;" title="Click to sort">H <span class="sort-arrow">▲</span></th>
                                         <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat1="Doubles" style="cursor:pointer;user-select:none;" title="Click to sort">2B <span class="sort-arrow">▲</span></th>
                                         <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat1="Triples" style="cursor:pointer;user-select:none;" title="Click to sort">3B <span class="sort-arrow">▲</span></th>
@@ -205,13 +206,13 @@
                 <div class="flex gap-2 mb-6">
                     <button 
                         id="tabPitching" 
-                        class="tab-button active px-6 py-2 rounded-lg font-semibold"
+                        class="tab-button inactive px-6 py-2 rounded-lg font-semibold"
                     >
                         Pitching
                     </button>
                     <button 
                         id="tabHitting" 
-                        class="tab-button inactive px-6 py-2 rounded-lg font-semibold"
+                        class="tab-button active px-6 py-2 rounded-lg font-semibold"
                     >
                         Hitting
                     </button>
@@ -243,7 +244,7 @@
                 </div>
 
                 <!-- Pitching Tab -->
-                <div id="pitchingTab" class="bg-white rounded-lg shadow-sm overflow-hidden">
+                <div id="pitchingTab" class="bg-white rounded-lg shadow-sm overflow-hidden" style="display:none;">
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200 voting-table">
                             <thead class="bg-gray-50">
@@ -271,7 +272,7 @@
                 </div>
 
                 <!-- Hitting Tab -->
-                <div id="hittingTab" class="bg-white rounded-lg shadow-sm overflow-hidden" style="display: none;">
+                <div id="hittingTab" class="bg-white rounded-lg shadow-sm overflow-hidden">
                     <div class="overflow-x-auto">
                         <table class="min-w-full divide-y divide-gray-200 voting-table">
                             <thead class="bg-gray-50">
@@ -283,6 +284,7 @@
                                     <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat2="Batting average" style="cursor:pointer;user-select:none;" title="Click to sort">AVG <span class="sort-arrow2">▲</span></th>
                                     <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat2="On-base percentage" style="cursor:pointer;user-select:none;" title="Click to sort">OBP <span class="sort-arrow2">▲</span></th>
                                     <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat2="Slugging percentage" style="cursor:pointer;user-select:none;" title="Click to sort">SLG <span class="sort-arrow2">▲</span></th>
+                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat2="OPS" style="cursor:pointer;user-select:none;" title="Click to sort">OPS <span class="sort-arrow2">▲</span></th>
                                     <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat2="Total hits" style="cursor:pointer;user-select:none;" title="Click to sort">H <span class="sort-arrow2">▲</span></th>
                                     <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat2="Doubles" style="cursor:pointer;user-select:none;" title="Click to sort">2B <span class="sort-arrow2">▲</span></th>
                                     <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat2="Triples" style="cursor:pointer;user-select:none;" title="Click to sort">3B <span class="sort-arrow2">▲</span></th>
@@ -312,14 +314,14 @@
 
                     <!-- Ranked Tabs -->
                     <div class="flex gap-2 mb-4">
-                        <button id="tabRankedPitching" class="tab-button active px-6 py-2 rounded-lg font-semibold">Pitching</button>
-                        <button id="tabRankedHitting" class="tab-button inactive px-6 py-2 rounded-lg font-semibold">Hitting</button>
+                        <button id="tabRankedPitching" class="tab-button inactive px-6 py-2 rounded-lg font-semibold">Pitching</button>
+                        <button id="tabRankedHitting" class="tab-button active px-6 py-2 rounded-lg font-semibold">Hitting</button>
                     </div>
 
                     <div id="rankedEmpty" class="text-center py-8 text-gray-400 text-sm" style="display:none;">No players added yet. Click "+ Add" in the table above.</div>
 
                     <!-- Ranked Pitching Table -->
-                    <div id="rankedPitchingTab" class="bg-white rounded-lg shadow-sm overflow-hidden mb-4">
+                    <div id="rankedPitchingTab" class="bg-white rounded-lg shadow-sm overflow-hidden mb-4" style="display:none;">
                         <div class="overflow-x-auto">
                             <table class="min-w-full divide-y divide-gray-200 voting-table">
                                 <thead class="bg-gray-50">
@@ -328,15 +330,15 @@
                                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Player</th>
                                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">School</th>
                                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">All-Conf</th>
-                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">IP</th>
-                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">W</th>
-                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">L</th>
-                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">SV</th>
-                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">ERA</th>
-                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">K</th>
-                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">BB</th>
-                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">CG</th>
-                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">BAA</th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-statr="Innings pitched" style="cursor:pointer;user-select:none;" title="Click to sort">IP <span class="sort-arrow-r">▲</span></th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-statr="Wins" style="cursor:pointer;user-select:none;" title="Click to sort">W <span class="sort-arrow-r">▲</span></th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-statr="Losses" style="cursor:pointer;user-select:none;" title="Click to sort">L <span class="sort-arrow-r">▲</span></th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-statr="Saves" style="cursor:pointer;user-select:none;" title="Click to sort">SV <span class="sort-arrow-r">▲</span></th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-statr="ERA" style="cursor:pointer;user-select:none;" title="Click to sort">ERA <span class="sort-arrow-r">▲</span></th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-statr="Strikeouts" style="cursor:pointer;user-select:none;" title="Click to sort">K <span class="sort-arrow-r">▲</span></th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-statr="Walks" style="cursor:pointer;user-select:none;" title="Click to sort">BB <span class="sort-arrow-r">▲</span></th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-statr="Complete games" style="cursor:pointer;user-select:none;" title="Click to sort">CG <span class="sort-arrow-r">▲</span></th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-statr="Batting average against" style="cursor:pointer;user-select:none;" title="Click to sort">BAA <span class="sort-arrow-r">▲</span></th>
                                         <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Details</th>
                                         <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Remove</th>
                                     </tr>
@@ -347,7 +349,7 @@
                     </div>
 
                     <!-- Ranked Hitting Table -->
-                    <div id="rankedHittingTab" class="bg-white rounded-lg shadow-sm overflow-hidden mb-4" style="display:none;">
+                    <div id="rankedHittingTab" class="bg-white rounded-lg shadow-sm overflow-hidden mb-4">
                         <div class="overflow-x-auto">
                             <table class="min-w-full divide-y divide-gray-200 voting-table">
                                 <thead class="bg-gray-50">
@@ -356,17 +358,18 @@
                                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Player</th>
                                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">School</th>
                                         <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">All-Conf</th>
-                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">AVG</th>
-                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">OBP</th>
-                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">SLG</th>
-                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">H</th>
-                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">2B</th>
-                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">3B</th>
-                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">HR</th>
-                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">R</th>
-                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">RBI</th>
-                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">SB</th>
-                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">CS</th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-statr="Batting average" style="cursor:pointer;user-select:none;" title="Click to sort">AVG <span class="sort-arrow-r">▲</span></th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-statr="On-base percentage" style="cursor:pointer;user-select:none;" title="Click to sort">OBP <span class="sort-arrow-r">▲</span></th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-statr="Slugging percentage" style="cursor:pointer;user-select:none;" title="Click to sort">SLG <span class="sort-arrow-r">▲</span></th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-statr="OPS" style="cursor:pointer;user-select:none;" title="Click to sort">OPS <span class="sort-arrow-r">▲</span></th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-statr="Total hits" style="cursor:pointer;user-select:none;" title="Click to sort">H <span class="sort-arrow-r">▲</span></th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-statr="Doubles" style="cursor:pointer;user-select:none;" title="Click to sort">2B <span class="sort-arrow-r">▲</span></th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-statr="Triples" style="cursor:pointer;user-select:none;" title="Click to sort">3B <span class="sort-arrow-r">▲</span></th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-statr="Home runs" style="cursor:pointer;user-select:none;" title="Click to sort">HR <span class="sort-arrow-r">▲</span></th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-statr="Runs scored" style="cursor:pointer;user-select:none;" title="Click to sort">R <span class="sort-arrow-r">▲</span></th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-statr="RBIs" style="cursor:pointer;user-select:none;" title="Click to sort">RBI <span class="sort-arrow-r">▲</span></th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-statr="Stolen bases" style="cursor:pointer;user-select:none;" title="Click to sort">SB <span class="sort-arrow-r">▲</span></th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-statr="Caught stealing" style="cursor:pointer;user-select:none;" title="Click to sort">CS <span class="sort-arrow-r">▲</span></th>
                                         <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Details</th>
                                         <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Remove</th>
                                     </tr>
@@ -446,12 +449,16 @@
 
     <script>
         // Configuration
+        // Where votes get submitted - UPDATE with your own Google Apps Script URL
         const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbyqXWZykUxcHvKhy0YnNnSbLamaEz1ZXVD1T7r35Fzieg9xynSlGNG5k0pBPMsFyhOd/exec';
         // Coach of the Year filter config — update these per classification
         const COACH_SPORT = 'Softball'; // 'Softball' or 'Baseball'
         const COACH_CLASS = '6A';       // '6A', '5A', '4A', '3A', '2A', '1A'
+        // Source of coach information. Don't need to update
         const coachDataUrl = "https://script.googleusercontent.com/a/macros/idahostatesman.com/echo?user_content_key=AUkAhnTcoKPzY639Jqqdsz1KzBSy8cJI64FXfuK1oQTZkhipFLJjm1FCTGhJy_7sPvxGPMESheD_O1KZtZRL5TxGnJoEQUk0gudUvbMA66xFgp2vHvkZgfKgUIE3pN9-ONILt7ouYv0qoXUpdTNG-6kdEzyozoXCKIYac_Xtd5zLbQlUqz6tbXNNG-zq5F7v5ZJt1fWGTqmwHouE4Z2O0g_iJe5g6OhctqkFNL05yEEPAibOC_E44aHvrQ9CZHnq8TvQrVp8Mu4VrcMWD_S13DL4Ar8ujQG0-5cicMjk6OoMl_8L0F4PvlY&lib=M0nMRL5jBmmSmv7uo3XUzIKaDfETvgIFd";
-        const dataUrl = "https://script.googleusercontent.com/a/macros/idahostatesman.com/echo?user_content_key=AUkAhnSuMMmG_E6C-QffPj54teg6MJS9g8WigSlYMGTUuX37_d7va9CfT_c9blTn25FjPoF_vM0D4cFeKQf7bKkzhQi-0d0ccrGv3mRgc49_udRJR98gvXMyHUirEieS25XsSbAfcQ5iuDVnbwxkDATwdP47hveKU5vAgG_Hsjlf7s_-S6DIYzgb7NVDnSnClRim3bkEQOLdLV8WF2cwa6SAGjmPW8uZaFh_06AK4tacrigqcyKeqAR7zM2_jhSu4grM_VoEh8JeSLs1KeybA3CsF2j6Y-B98hJp67yVKCiqDZzFrZNfh9Q&lib=M8FO3wOFktGohdPHgXZoQYKaDfETvgIFd"; // Update with your data source
+        // Source of player information. Must update
+        const dataUrl = "https://script.googleusercontent.com/a/macros/idahostatesman.com/echo?user_content_key=AUkAhnSuMMmG_E6C-QffPj54teg6MJS9g8WigSlYMGTUuX37_d7va9CfT_c9blTn25FjPoF_vM0D4cFeKQf7bKkzhQi-0d0ccrGv3mRgc49_udRJR98gvXMyHUirEieS25XsSbAfcQ5iuDVnbwxkDATwdP47hveKU5vAgG_Hsjlf7s_-S6DIYzgb7NVDnSnClRim3bkEQOLdLV8WF2cwa6SAGjmPW8uZaFh_06AK4tacrigqcyKeqAR7zM2_jhSu4grM_VoEh8JeSLs1KeybA3CsF2j6Y-B98hJp67yVKCiqDZzFrZNfh9Q&lib=M8FO3wOFktGohdPHgXZoQYKaDfETvgIFd"; 
+        
         
         // State
         let coachName = '';
@@ -468,11 +475,55 @@
         let stage2Sort = { field: null, dir: 'asc' };
         let saveTimer = null;
 
+        function computeOPS(player) {
+            const obp = parseFloat(player['On-base percentage']);
+            const slg = parseFloat(player['Slugging percentage']);
+            if (isNaN(obp) || isNaN(slg) || (obp === 0 && slg === 0)) return 'N/A';
+            const obpDecimal = obp > 1 ? obp / 1000 : obp;
+            return (obpDecimal + slg).toFixed(3);
+        }
+
+        function formatStat(key, val) {
+            if (val === null || val === undefined || val === '' || val === 'N/A') return 'N/A';
+            const num = parseFloat(val);
+            if (isNaN(num)) return val;
+            if (key === 'ERA') return num.toFixed(2);
+            if (key === 'Batting average') return num > 1 ? (num / 1000).toFixed(3).replace(/^0/, '') : num.toFixed(3).replace(/^0/, '');
+            if (key === 'On-base percentage') return num > 1 ? (num / 1000).toFixed(3).replace(/^0/, '') : num.toFixed(3).replace(/^0/, '');
+            if (key === 'Slugging percentage') return num.toFixed(3).replace(/^0/, '');
+            if (key === 'Batting average against') return num.toFixed(3);
+            if (key === 'Slugging percentage') return num.toFixed(3);
+            return val;
+        }
+
+        const sortDefaults = {
+            'Innings pitched': 'desc',
+            'Wins': 'desc',
+            'Losses': 'asc',
+            'Saves': 'desc',
+            'ERA': 'asc',
+            'Strikeouts': 'desc',
+            'Walks': 'asc',
+            'Complete games': 'desc',
+            'Batting average against': 'asc',
+            'Batting average': 'desc',
+            'On-base percentage': 'desc',
+            'Slugging percentage': 'desc',
+            'Total hits': 'desc',
+            'Doubles': 'desc',
+            'Triples': 'desc',
+            'Home runs': 'desc',
+            'Runs scored': 'desc',
+            'RBIs': 'desc',
+            'Stolen bases': 'desc',
+            'OPS': 'desc'
+        };
+
         // Pitching stats fields
         const pitchingStats = ['Innings pitched', 'Wins', 'Losses', 'Saves', 'ERA', 'Strikeouts', 'Walks', 'Complete games', 'Batting average against'];
         
         // Hitting stats fields
-        const hittingStats = ['Batting average', 'On-base percentage', 'Slugging percentage', 'Total hits', 'Doubles', 'Triples', 'Home runs', 'Runs scored', 'RBIs', 'Stolen bases', 'Caught stealing'];
+        const hittingStats = ['Batting average', 'On-base percentage', 'Slugging percentage', 'OPS', 'Total hits', 'Doubles', 'Triples', 'Home runs', 'Runs scored', 'RBIs', 'Stolen bases', 'Caught stealing'];
 
         // ==================== STAGE 0: COACH INFO ====================
         function initStage0() {
@@ -551,7 +602,7 @@
                             stage1Sort.dir = stage1Sort.dir === 'asc' ? 'desc' : 'asc';
                         } else {
                             stage1Sort.field = f;
-                            stage1Sort.dir = 'asc';
+                            stage1Sort.dir = sortDefaults[f] || 'asc';
                         }
                         renderCandidates();
                     });
@@ -568,11 +619,11 @@
             }
         }
 
-        let currentTab1 = 'pitching';
+        let currentTab1 = 'hitting';
         let stage1Sort = { field: null, dir: 'asc' };
 
         const pitchingStats1 = ['Innings pitched', 'Wins', 'Losses', 'Saves', 'ERA', 'Strikeouts', 'Walks', 'Complete games', 'Batting average against'];
-        const hittingStats1  = ['Batting average', 'On-base percentage', 'Slugging percentage', 'Total hits', 'Doubles', 'Triples', 'Home runs', 'Runs scored', 'RBIs', 'Stolen bases', 'Caught stealing'];
+        const hittingStats1  = ['Batting average', 'On-base percentage', 'Slugging percentage', 'OPS', 'Total hits', 'Doubles', 'Triples', 'Home runs', 'Runs scored', 'RBIs', 'Stolen bases', 'Caught stealing'];
 
         const EXCLUDED_FIELDS = new Set(['Timestamp', 'Email Address', 'Coach', 'I want to nominate a player from my team', "Player of the Year nomination", 'I confirm that I entered slugging percentage in the above box, not OPS']);
 
@@ -592,8 +643,8 @@
             // Sort: stat column if active, otherwise school then name
             filtered.sort((a, b) => {
                 if (stage1Sort.field) {
-                    const av = parseFloat(a[stage1Sort.field]) || 0;
-                    const bv = parseFloat(b[stage1Sort.field]) || 0;
+                    const av = stage1Sort.field === 'OPS' ? parseFloat(computeOPS(a)) || 0 : parseFloat(a[stage1Sort.field]) || 0;
+                    const bv = stage1Sort.field === 'OPS' ? parseFloat(computeOPS(b)) || 0 : parseFloat(b[stage1Sort.field]) || 0;
                     if (av === 0 && bv !== 0) return 1;
                     if (bv === 0 && av !== 0) return -1;
                     return stage1Sort.dir === 'asc' ? av - bv : bv - av;
@@ -616,7 +667,7 @@
                 const row = document.createElement('tr');
                 row.className = isSelected ? 'bg-blue-50' : '';
 
-                const statCells = stats.map(s => `<td class="px-4 py-3 text-center text-sm text-gray-700">${player[s] ?? 'N/A'}</td>`).join('');
+                const statCells = stats.map(s => `<td class="px-4 py-3 text-center text-sm text-gray-700">${s === 'OPS' ? computeOPS(player) : formatStat(s, player[s])}</td>`).join('');
                 const allConfVal = player['All-conference awards this year'];
                 const allConf = allConfVal
                     ? `<span class="text-sm text-gray-700">${allConfVal}</span>`
@@ -748,14 +799,14 @@
                             stage2Sort.dir = stage2Sort.dir === 'asc' ? 'desc' : 'asc';
                         } else {
                             stage2Sort.field = f;
-                            stage2Sort.dir = 'asc';
+                            stage2Sort.dir = sortDefaults[f] || 'asc';
                         }
                         renderPlayerTable();
                     });
                 });
 
                 // Render initial table
-                currentTab = 'pitching';
+                currentTab = 'hitting';
                 renderPlayerTable();
 
                 loading.style.display = 'none';
@@ -809,8 +860,8 @@
             // Sort by active stat, else school then name
             if (stage2Sort.field) {
                 displayPlayers.sort((a, b) => {
-                    const av = parseFloat(a[stage2Sort.field]) || 0;
-                    const bv = parseFloat(b[stage2Sort.field]) || 0;
+                    const av = stage2Sort.field === 'OPS' ? parseFloat(computeOPS(a)) || 0 : parseFloat(a[stage2Sort.field]) || 0;
+                    const bv = stage2Sort.field === 'OPS' ? parseFloat(computeOPS(b)) || 0 : parseFloat(b[stage2Sort.field]) || 0;
                     if (av === 0 && bv !== 0) return 1;
                     if (bv === 0 && av !== 0) return -1;
                     return stage2Sort.dir === 'asc' ? av - bv : bv - av;
@@ -834,7 +885,7 @@
                 if (isRanked) row.style.opacity = '0.4';
 
                 let statsCells = stats.map(stat => {
-                    const value = player[stat] ?? 'N/A';
+                    const value = stat === 'OPS' ? computeOPS(player) : formatStat(stat, player[stat]);
                     return `<td class="px-4 py-3 text-center text-sm text-gray-700">${value}</td>`;
                 }).join('');
 
@@ -906,10 +957,12 @@
             renderPlayerTable();
         }
 
-        let currentRankedTab = 'pitching';
+        let currentRankedTab = 'hitting';
+        let rankedSort = { field: null, dir: 'asc' };
 
         function switchRankedTab(tab) {
             currentRankedTab = tab;
+            rankedSort = { field: null, dir: 'asc' };
             document.getElementById('tabRankedPitching').className = tab === 'pitching' ? 'tab-button active px-6 py-2 rounded-lg font-semibold' : 'tab-button inactive px-6 py-2 rounded-lg font-semibold';
             document.getElementById('tabRankedHitting').className  = tab === 'hitting'  ? 'tab-button active px-6 py-2 rounded-lg font-semibold' : 'tab-button inactive px-6 py-2 rounded-lg font-semibold';
             document.getElementById('rankedPitchingTab').style.display = tab === 'pitching' ? 'block' : 'none';
@@ -930,7 +983,21 @@
             }
             empty.style.display = 'none';
 
-            currentRankings.forEach((r, idx) => {
+            // Apply sort if active, otherwise keep rank order
+            let displayRankings = [...currentRankings];
+            if (rankedSort.field) {
+                displayRankings.sort((a, b) => {
+                    const playerA = rankingPlayers.find(p => p["Player's name"] === a.playerName) || {};
+                    const playerB = rankingPlayers.find(p => p["Player's name"] === b.playerName) || {};
+                    const av = rankedSort.field === 'OPS' ? parseFloat(computeOPS(playerA)) || 0 : parseFloat(playerA[rankedSort.field]) || 0;
+                    const bv = rankedSort.field === 'OPS' ? parseFloat(computeOPS(playerB)) || 0 : parseFloat(playerB[rankedSort.field]) || 0;
+                    if (av === 0 && bv !== 0) return 1;
+                    if (bv === 0 && av !== 0) return -1;
+                    return rankedSort.dir === 'asc' ? av - bv : bv - av;
+                });
+            }
+
+            displayRankings.forEach((r, idx) => {
                 // Look up full player object
                 const player = rankingPlayers.find(p => p["Player's name"] === r.playerName) || {};
 
@@ -938,7 +1005,7 @@
                     const stats = tabIdx === 0 ? pitchingStats : hittingStats;
                     const row = document.createElement('tr');
 
-                    const statCells = stats.map(s => `<td class="px-4 py-3 text-center text-sm text-gray-700">${player[s] ?? 'N/A'}</td>`).join('');
+                    const statCells = stats.map(s => `<td class="px-4 py-3 text-center text-sm text-gray-700">${s === 'OPS' ? computeOPS(player) : formatStat(s, player[s])}</td>`).join('');
                     const allConfVal = player['All-conference awards this year'];
                     const allConf = allConfVal ? `<span class="text-sm text-gray-700">${allConfVal}</span>` : '<span class="text-gray-400">—</span>';
                     const isFirst = idx === 0;
@@ -984,6 +1051,39 @@
                     row.querySelector('.details-ranked').addEventListener('click', () => openPlayerModal(player));
 
                     tbody.appendChild(row);
+                });
+            });
+
+            // Wire ranked sort headers and update indicators
+            const rankedTabId = currentRankedTab === 'pitching' ? 'rankedPitchingTab' : 'rankedHittingTab';
+            document.querySelectorAll(`#${rankedTabId} th[data-statr]`).forEach(th => {
+                const arrow = th.querySelector('.sort-arrow-r');
+                if (arrow) {
+                    if (rankedSort.field === th.dataset.statr) {
+                        arrow.textContent = rankedSort.dir === 'asc' ? '▲' : '▼';
+                        arrow.style.opacity = '1';
+                        th.style.color = '#7c3aed';
+                    } else {
+                        arrow.textContent = '▲';
+                        arrow.style.opacity = '0.3';
+                        th.style.color = '';
+                    }
+                }
+                // Clone to remove stale listeners
+                const newTh = th.cloneNode(true);
+                th.parentNode.replaceChild(newTh, th);
+                newTh.querySelector('.sort-arrow-r') && (newTh.querySelector('.sort-arrow-r').style.opacity = rankedSort.field === newTh.dataset.statr ? '1' : '0.3');
+                newTh.querySelector('.sort-arrow-r') && (newTh.querySelector('.sort-arrow-r').textContent = rankedSort.field === newTh.dataset.statr ? (rankedSort.dir === 'asc' ? '▲' : '▼') : '▲');
+                if (rankedSort.field === newTh.dataset.statr) newTh.style.color = '#7c3aed';
+                newTh.addEventListener('click', () => {
+                    const f = newTh.dataset.statr;
+                    if (rankedSort.field === f) {
+                        rankedSort.dir = rankedSort.dir === 'asc' ? 'desc' : 'asc';
+                    } else {
+                        rankedSort.field = f;
+                        rankedSort.dir = sortDefaults[f] || 'asc';
+                    }
+                    renderRankedList();
                 });
             });
         }
