@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All-State Softball Voting</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        .overflow-x-auto {
+            -webkit-overflow-scrolling: touch;
+        }
+        .stage-hidden {
+            display: none;
+        }
+        .sortable-header {
+            cursor: pointer;
+            user-select: none;
+        }
+        .sortable-header:hover {
+            background-color: #e5e7eb;
+        }
+        .sort-indicator {
+            display: inline-block;
+            margin-left: 4px;
+        }
+        .voting-table tbody tr:hover {
+            background-color: #f9fafb;
+        }
+        .player-rank {
+            font-weight: 600;
+            color: #1f2937;
+            min-width: 30px;
+        }
+        .save-status {
+            transition: opacity 0.3s ease;
+        }
+        .tab-button {
+            transition: background-color 0.2s ease;
+        }
+        .tab-button.active {
+            background-color: #3b82f6;
+            color: white;
+        }
+        .tab-button.inactive {
+            background-color: #e5e7eb;
+            color: #374151;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div id="app" class="min-h-screen p-4">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header -->
+            <div id="siteHeader" class="mb-6">
+                <h1 class="text-4xl font-bold text-gray-900 mb-2">All-State Softball Voting</h1>
+                <p class="text-gray-600">Idaho Statesman</p>
+            </div>
+
+            <!-- Intro: Coach Info -->
+            <div id="stage0" class="mb-8">
+                <div class="bg-gray-50 border border-gray-200 rounded-lg p-8 max-w-md mx-auto">
+                    <h2 class="text-xl font-bold text-gray-900 mb-1">Welcome</h2>
+                    <p class="text-gray-600 text-sm mb-6">Please enter your information to begin voting.</p>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Your Name</label>
+                            <input id="coachNameInput" type="text" placeholder="Coach name"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">School</label>
+                            <input id="coachSchoolInput" type="text" placeholder="School name"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
+                        </div>
+                        <button id="startVoting"
+                            class="w-full px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                            disabled>
+                            Start Voting
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Player of the Year -->
+            <div id="stage1" class="stage-hidden mb-8">
+                <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-2">Player of the Year</h2>
+                    <p class="text-gray-700">Select who you feel should be the state player of the year. 
+                        <br>Toggle between pitching and hitting stats with the button at the top of the table. 
+                        <br>Click on column headers to sort stats. 
+                        <br>Additional information, including coach's comments, is under the "View More" buttons.
+                        <br>After submission, you will proceed to ranking all-state players.</p>
+                </div>
+
+                <div id="loading1" class="flex items-center justify-center py-12">
+                    <div class="text-lg text-gray-600">Loading candidates...</div>
+                </div>
+
+                <div id="content1" style="display: none;">
+                    <!-- Tabs -->
+                    <div class="flex gap-2 mb-6">
+                        <button id="tabPitching1" class="tab-button active px-6 py-2 rounded-lg font-semibold">Pitching</button>
+                        <button id="tabHitting1" class="tab-button inactive px-6 py-2 rounded-lg font-semibold">Hitting</button>
+                    </div>
+
+                    <!-- Search -->
+                    <div class="mb-4">
+                        <input type="text" id="search1" placeholder="Search by player name or school..."
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+
+                    <!-- Pitching Table -->
+                    <div id="pitchingTab1" class="bg-white rounded-lg shadow-sm overflow-hidden mb-6">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200 voting-table">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Select</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Player</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">School</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">All-Conf</th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat1="Innings pitched" style="cursor:pointer;user-select:none;" title="Click to sort">IP <span class="sort-arrow">▲</span></th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat1="Wins" style="cursor:pointer;user-select:none;" title="Click to sort">W <span class="sort-arrow">▲</span></th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat1="Losses" style="cursor:pointer;user-select:none;" title="Click to sort">L <span class="sort-arrow">▲</span></th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat1="Saves" style="cursor:pointer;user-select:none;" title="Click to sort">SV <span class="sort-arrow">▲</span></th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat1="ERA" style="cursor:pointer;user-select:none;" title="Click to sort">ERA <span class="sort-arrow">▲</span></th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat1="Strikeouts" style="cursor:pointer;user-select:none;" title="Click to sort">K <span class="sort-arrow">▲</span></th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat1="Walks" style="cursor:pointer;user-select:none;" title="Click to sort">BB <span class="sort-arrow">▲</span></th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat1="Complete games" style="cursor:pointer;user-select:none;" title="Click to sort">CG <span class="sort-arrow">▲</span></th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat1="Batting average against" style="cursor:pointer;user-select:none;" title="Click to sort">BAA <span class="sort-arrow">▲</span></th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Details</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pitchingBody1" class="bg-white divide-y divide-gray-200"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Hitting Table -->
+                    <div id="hittingTab1" class="bg-white rounded-lg shadow-sm overflow-hidden mb-6" style="display:none;">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200 voting-table">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Select</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Player</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">School</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">All-Conf</th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat1="Batting average" style="cursor:pointer;user-select:none;" title="Click to sort">AVG <span class="sort-arrow">▲</span></th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat1="On-base percentage" style="cursor:pointer;user-select:none;" title="Click to sort">OBP <span class="sort-arrow">▲</span></th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat1="Slugging percentage" style="cursor:pointer;user-select:none;" title="Click to sort">SLG <span class="sort-arrow">▲</span></th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat1="Total hits" style="cursor:pointer;user-select:none;" title="Click to sort">H <span class="sort-arrow">▲</span></th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat1="Doubles" style="cursor:pointer;user-select:none;" title="Click to sort">2B <span class="sort-arrow">▲</span></th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat1="Triples" style="cursor:pointer;user-select:none;" title="Click to sort">3B <span class="sort-arrow">▲</span></th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat1="Home runs" style="cursor:pointer;user-select:none;" title="Click to sort">HR <span class="sort-arrow">▲</span></th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat1="Runs scored" style="cursor:pointer;user-select:none;" title="Click to sort">R <span class="sort-arrow">▲</span></th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat1="RBIs" style="cursor:pointer;user-select:none;" title="Click to sort">RBI <span class="sort-arrow">▲</span></th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat1="Stolen bases" style="cursor:pointer;user-select:none;" title="Click to sort">SB <span class="sort-arrow">▲</span></th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat1="Caught stealing" style="cursor:pointer;user-select:none;" title="Click to sort">CS <span class="sort-arrow">▲</span></th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Details</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="hittingBody1" class="bg-white divide-y divide-gray-200"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Selected Player -->
+                    <div id="selectedPlayer1" class="bg-green-50 border-l-4 border-green-500 p-4 mb-6" style="display: none;">
+                        <p class="text-green-800"><strong>Selected:</strong> <span id="selectedPlayerName1"></span> from <span id="selectedPlayerSchool1"></span></p>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button id="submitStage1" disabled
+                        class="w-full px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed">
+                        Submit Player of the Year & Continue to Rankings
+                    </button>
+                </div>
+
+                <!-- Player Details Modal -->
+                <div id="noResults1" class="text-center py-8 text-gray-500" style="display: none;">
+                    No Player of the Year candidates found.
+                </div>
+            </div>
+
+            <!-- Divider -->
+            <hr class="my-12 border-gray-300">
+
+            <!-- All-Star Rankings -->
+            <div id="stage2" class="stage-hidden mb-8">
+                <div class="bg-purple-50 border-l-4 border-purple-500 p-4 mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-2">All-State selections</h2>
+                    <p class="text-gray-700">Use the first table to select 22 players (11 first, 11 second team) for the all-state team. You must pick 22 to be able to submit.
+                        <br>Use the second table to rank players with the up/down arrows. Higher rank = more points. You can change your rankings as much as you want before submission.
+                        <br>Toggle between pitching and hitting stats with the button at the top of the table. 
+                        <br>Click on column headers to sort stats. 
+                        <br>Additional information, including coach's comments, is under the "View More" buttons.
+                        <br>Your votes auto-save.</p>
+                </div>
+
+                <!-- Tabs: Pitching vs Hitting -->
+                <div class="flex gap-2 mb-6">
+                    <button 
+                        id="tabPitching" 
+                        class="tab-button active px-6 py-2 rounded-lg font-semibold"
+                    >
+                        Pitching
+                    </button>
+                    <button 
+                        id="tabHitting" 
+                        class="tab-button inactive px-6 py-2 rounded-lg font-semibold"
+                    >
+                        Hitting
+                    </button>
+                </div>
+
+                <!-- Search & Filter -->
+                <div class="mb-6 flex flex-col gap-4">
+                    <input 
+                        type="text" 
+                        id="search2" 
+                        placeholder="Search by player name or school..." 
+                        class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    >
+                </div>
+
+                <!-- Save Status -->
+                <div class="mb-4 flex items-center justify-between">
+                    <div id="rankingCount" class="text-sm text-gray-600">
+                        Ranked: <span id="rankedCount">0</span> / 22
+                    </div>
+                    <div class="save-status text-sm">
+                        <span id="saveStatus" class="text-gray-500">Auto-saving...</span>
+                    </div>
+                </div>
+
+                <!-- Loading -->
+                <div id="loading2" class="flex items-center justify-center py-12">
+                    <div class="text-lg text-gray-600">Loading players...</div>
+                </div>
+
+                <!-- Pitching Tab -->
+                <div id="pitchingTab" class="bg-white rounded-lg shadow-sm overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200 voting-table">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase"></th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Player</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">School</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">All-Conf</th>
+                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat2="Innings pitched" style="cursor:pointer;user-select:none;" title="Click to sort">IP <span class="sort-arrow2">▲</span></th>
+                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat2="Wins" style="cursor:pointer;user-select:none;" title="Click to sort">W <span class="sort-arrow2">▲</span></th>
+                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat2="Losses" style="cursor:pointer;user-select:none;" title="Click to sort">L <span class="sort-arrow2">▲</span></th>
+                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat2="Saves" style="cursor:pointer;user-select:none;" title="Click to sort">SV <span class="sort-arrow2">▲</span></th>
+                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat2="ERA" style="cursor:pointer;user-select:none;" title="Click to sort">ERA <span class="sort-arrow2">▲</span></th>
+                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat2="Strikeouts" style="cursor:pointer;user-select:none;" title="Click to sort">K <span class="sort-arrow2">▲</span></th>
+                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat2="Walks" style="cursor:pointer;user-select:none;" title="Click to sort">BB <span class="sort-arrow2">▲</span></th>
+                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat2="Complete games" style="cursor:pointer;user-select:none;" title="Click to sort">CG <span class="sort-arrow2">▲</span></th>
+                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat2="Batting average against" style="cursor:pointer;user-select:none;" title="Click to sort">BAA <span class="sort-arrow2">▲</span></th>
+                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Details</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pitchingTableBody" class="bg-white divide-y divide-gray-200">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Hitting Tab -->
+                <div id="hittingTab" class="bg-white rounded-lg shadow-sm overflow-hidden" style="display: none;">
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200 voting-table">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase"></th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Player</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">School</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">All-Conf</th>
+                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat2="Batting average" style="cursor:pointer;user-select:none;" title="Click to sort">AVG <span class="sort-arrow2">▲</span></th>
+                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat2="On-base percentage" style="cursor:pointer;user-select:none;" title="Click to sort">OBP <span class="sort-arrow2">▲</span></th>
+                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat2="Slugging percentage" style="cursor:pointer;user-select:none;" title="Click to sort">SLG <span class="sort-arrow2">▲</span></th>
+                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat2="Total hits" style="cursor:pointer;user-select:none;" title="Click to sort">H <span class="sort-arrow2">▲</span></th>
+                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat2="Doubles" style="cursor:pointer;user-select:none;" title="Click to sort">2B <span class="sort-arrow2">▲</span></th>
+                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat2="Triples" style="cursor:pointer;user-select:none;" title="Click to sort">3B <span class="sort-arrow2">▲</span></th>
+                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat2="Home runs" style="cursor:pointer;user-select:none;" title="Click to sort">HR <span class="sort-arrow2">▲</span></th>
+                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat2="Runs scored" style="cursor:pointer;user-select:none;" title="Click to sort">R <span class="sort-arrow2">▲</span></th>
+                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat2="RBIs" style="cursor:pointer;user-select:none;" title="Click to sort">RBI <span class="sort-arrow2">▲</span></th>
+                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat2="Stolen bases" style="cursor:pointer;user-select:none;" title="Click to sort">SB <span class="sort-arrow2">▲</span></th>
+                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase" data-stat2="Caught stealing" style="cursor:pointer;user-select:none;" title="Click to sort">CS <span class="sort-arrow2">▲</span></th>
+                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Details</th>
+                                </tr>
+                            </thead>
+                            <tbody id="hittingTableBody" class="bg-white divide-y divide-gray-200">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Ranked List -->
+                <div class="mt-8">
+                    <div class="bg-purple-50 border border-purple-200 rounded-lg p-4 mb-4 flex items-center justify-between">
+                        <div>
+                            <h3 class="font-bold text-gray-900 text-lg">Your Rankings</h3>
+                            <p class="text-sm text-gray-600"><span id="rankedCount">0</span> / 22 selected.</p>
+                        </div>
+                        <button id="clearRankings" class="text-xs text-red-500 hover:text-red-700 font-medium">Clear all</button>
+                    </div>
+
+                    <!-- Ranked Tabs -->
+                    <div class="flex gap-2 mb-4">
+                        <button id="tabRankedPitching" class="tab-button active px-6 py-2 rounded-lg font-semibold">Pitching</button>
+                        <button id="tabRankedHitting" class="tab-button inactive px-6 py-2 rounded-lg font-semibold">Hitting</button>
+                    </div>
+
+                    <div id="rankedEmpty" class="text-center py-8 text-gray-400 text-sm" style="display:none;">No players added yet. Click "+ Add" in the table above.</div>
+
+                    <!-- Ranked Pitching Table -->
+                    <div id="rankedPitchingTab" class="bg-white rounded-lg shadow-sm overflow-hidden mb-4">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200 voting-table">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Rank</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Player</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">School</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">All-Conf</th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">IP</th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">W</th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">L</th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">SV</th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">ERA</th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">K</th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">BB</th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">CG</th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">BAA</th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Details</th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Remove</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="rankedPitchingBody" class="bg-white divide-y divide-gray-200"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Ranked Hitting Table -->
+                    <div id="rankedHittingTab" class="bg-white rounded-lg shadow-sm overflow-hidden mb-4" style="display:none;">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200 voting-table">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Rank</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Player</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">School</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">All-Conf</th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">AVG</th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">OBP</th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">SLG</th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">H</th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">2B</th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">3B</th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">HR</th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">R</th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">RBI</th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">SB</th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">CS</th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Details</th>
+                                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Remove</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="rankedHittingBody" class="bg-white divide-y divide-gray-200"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Continue to Coach of the Year -->
+                <button id="continueToStage3"
+                    class="w-full mt-6 px-6 py-3 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700">
+                    Continue to Coach of the Year →
+                </button>
+            </div>
+
+            <!-- Divider -->
+            <hr class="my-12 border-gray-300">
+
+            <!-- Coach of the Year -->
+            <div id="stage3" class="stage-hidden mb-8">
+                <div class="bg-green-50 border-l-4 border-green-500 p-4 mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-2">Coach of the Year</h2>
+                    <p class="text-gray-700">Select your classification's coach of the year, then submit all votes.</p>
+                </div>
+
+                <div id="loading3" class="flex items-center justify-center py-12">
+                    <div class="text-lg text-gray-600">Loading coaches...</div>
+                </div>
+
+                <div id="content3" style="display:none;">
+                    <!-- Coaches Table -->
+                    <div class="bg-white rounded-lg shadow-sm overflow-hidden mb-6">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Select</th>
+                                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Coach, School</th>
+                                </tr>
+                            </thead>
+                            <tbody id="coachTableBody" class="bg-white divide-y divide-gray-200"></tbody>
+                        </table>
+                    </div>
+
+                    <!-- Selected Coach -->
+                    <div id="selectedCoach3" class="bg-green-50 border-l-4 border-green-500 p-4 mb-6" style="display:none;">
+                        <p class="text-green-800"><strong>Selected:</strong> <span id="selectedCoachName3"></span></p>
+                    </div>
+
+                    <!-- Submit All Votes -->
+                    <button id="submitVotes" disabled
+                        class="w-full px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed">
+                        Submit All Votes
+                    </button>
+                </div>
+
+                <div id="noResults3" class="text-center py-8 text-gray-500" style="display:none;">
+                    No coaches found.
+                </div>
+            </div>
+
+
+
+            <!-- Player Details Modal -->
+            <div id="playerModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center" style="display:none;">
+                <div class="bg-white rounded-lg shadow-xl max-w-lg w-full mx-4 overflow-y-auto" style="max-height:80vh;">
+                    <div class="flex items-center justify-between p-4 border-b sticky top-0 bg-white">
+                        <h3 id="modalPlayerName" class="text-lg font-bold text-gray-900"></h3>
+                        <button id="closeModal" class="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
+                    </div>
+                    <div id="modalBody" class="p-4 space-y-2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbyqXWZykUxcHvKhy0YnNnSbLamaEz1ZXVD1T7r35Fzieg9xynSlGNG5k0pBPMsFyhOd/exec';
+        // Coach of the Year filter config — update these per classification
+        const COACH_SPORT = 'Softball'; // 'Softball' or 'Baseball'
+        const COACH_CLASS = '6A';       // '6A', '5A', '4A', '3A', '2A', '1A'
+        const coachDataUrl = "https://script.googleusercontent.com/a/macros/idahostatesman.com/echo?user_content_key=AUkAhnTcoKPzY639Jqqdsz1KzBSy8cJI64FXfuK1oQTZkhipFLJjm1FCTGhJy_7sPvxGPMESheD_O1KZtZRL5TxGnJoEQUk0gudUvbMA66xFgp2vHvkZgfKgUIE3pN9-ONILt7ouYv0qoXUpdTNG-6kdEzyozoXCKIYac_Xtd5zLbQlUqz6tbXNNG-zq5F7v5ZJt1fWGTqmwHouE4Z2O0g_iJe5g6OhctqkFNL05yEEPAibOC_E44aHvrQ9CZHnq8TvQrVp8Mu4VrcMWD_S13DL4Ar8ujQG0-5cicMjk6OoMl_8L0F4PvlY&lib=M0nMRL5jBmmSmv7uo3XUzIKaDfETvgIFd";
+        const dataUrl = "https://script.googleusercontent.com/a/macros/idahostatesman.com/echo?user_content_key=AUkAhnSuMMmG_E6C-QffPj54teg6MJS9g8WigSlYMGTUuX37_d7va9CfT_c9blTn25FjPoF_vM0D4cFeKQf7bKkzhQi-0d0ccrGv3mRgc49_udRJR98gvXMyHUirEieS25XsSbAfcQ5iuDVnbwxkDATwdP47hveKU5vAgG_Hsjlf7s_-S6DIYzgb7NVDnSnClRim3bkEQOLdLV8WF2cwa6SAGjmPW8uZaFh_06AK4tacrigqcyKeqAR7zM2_jhSu4grM_VoEh8JeSLs1KeybA3CsF2j6Y-B98hJp67yVKCiqDZzFrZNfh9Q&lib=M8FO3wOFktGohdPHgXZoQYKaDfETvgIFd"; // Update with your data source
+        
+        // State
+        let coachName = '';
+        let coachSchool = '';
+        let allCoaches = [];
+        let selectedCoachOfYear = null;
+        let allPlayers = [];
+        let playerOfYearCandidates = [];
+        let rankingPlayers = [];
+        let selectedPlayerOfYear = null;
+        let currentRankings = [];
+        let currentTab = 'pitching';
+        let currentSort = { field: null, direction: 'asc' };
+        let stage2Sort = { field: null, dir: 'asc' };
+        let saveTimer = null;
+
+        // Pitching stats fields
+        const pitchingStats = ['Innings pitched', 'Wins', 'Losses', 'Saves', 'ERA', 'Strikeouts', 'Walks', 'Complete games', 'Batting average against'];
+        
+        // Hitting stats fields
+        const hittingStats = ['Batting average', 'On-base percentage', 'Slugging percentage', 'Total hits', 'Doubles', 'Triples', 'Home runs', 'Runs scored', 'RBIs', 'Stolen bases', 'Caught stealing'];
+
+        // ==================== STAGE 0: COACH INFO ====================
+        function initStage0() {
+            const nameInput = document.getElementById('coachNameInput');
+            const schoolInput = document.getElementById('coachSchoolInput');
+            const startBtn = document.getElementById('startVoting');
+
+            function checkReady() {
+                startBtn.disabled = !(nameInput.value.trim() && schoolInput.value.trim());
+            }
+
+            nameInput.addEventListener('input', checkReady);
+            schoolInput.addEventListener('input', checkReady);
+
+            startBtn.addEventListener('click', () => {
+                coachName = nameInput.value.trim();
+                coachSchool = schoolInput.value.trim();
+                document.getElementById('stage0').classList.add('stage-hidden');
+                document.getElementById('stage1').classList.remove('stage-hidden');
+                initStage1();
+            });
+        }
+
+        // ==================== STAGE 1: PLAYER OF THE YEAR ====================
+        async function initStage1() {
+            try {
+                const loading = document.getElementById('loading1');
+                const content = document.getElementById('content1');
+                const noResults = document.getElementById('noResults1');
+
+                loading.style.display = 'flex';
+                content.style.display = 'none';
+
+                // Fetch data
+                allPlayers = await fetchPlayerData();
+                
+                // Filter for Player of the Year candidates
+                playerOfYearCandidates = allPlayers.filter(p => 
+                    p['Player of the Year nomination'] && 
+                    p['Player of the Year nomination'].toLowerCase().includes('yes')
+                );
+
+                if (playerOfYearCandidates.length === 0) {
+                    noResults.style.display = 'block';
+                    loading.style.display = 'none';
+                } else {
+                    renderCandidates();
+                    content.style.display = 'block';
+                    loading.style.display = 'none';
+                }
+
+                // Tab listeners
+                document.getElementById('tabPitching1').addEventListener('click', () => switchTab1('pitching'));
+                document.getElementById('tabHitting1').addEventListener('click', () => switchTab1('hitting'));
+                // Search listener
+                document.getElementById('search1').addEventListener('input', searchCandidates);
+                document.getElementById('submitStage1').addEventListener('click', submitStage1);
+                // Ranked tab buttons
+                document.getElementById('tabRankedPitching').addEventListener('click', () => switchRankedTab('pitching'));
+                document.getElementById('tabRankedHitting').addEventListener('click', () => switchRankedTab('hitting'));
+
+                // Clear rankings button
+                document.getElementById('clearRankings').addEventListener('click', () => {
+                    if (confirm('Clear all rankings?')) {
+                        currentRankings = [];
+                        saveRankings();
+                        renderPlayerTable();
+                    }
+                });
+
+                // Wire sort headers once
+                document.querySelectorAll('#pitchingTab1 th[data-stat1], #hittingTab1 th[data-stat1]').forEach(th => {
+                    th.addEventListener('click', () => {
+                        const f = th.dataset.stat1;
+                        if (stage1Sort.field === f) {
+                            stage1Sort.dir = stage1Sort.dir === 'asc' ? 'desc' : 'asc';
+                        } else {
+                            stage1Sort.field = f;
+                            stage1Sort.dir = 'asc';
+                        }
+                        renderCandidates();
+                    });
+                });
+                // Modal close
+                document.getElementById('closeModal').addEventListener('click', closePlayerModal);
+                document.getElementById('playerModal').addEventListener('click', function(e) {
+                    if (e.target === this) closePlayerModal();
+                });
+
+            } catch (error) {
+                console.error('Error loading Stage 1:', error);
+                document.getElementById('loading1').innerHTML = '<div class="text-red-600">Error loading data. Please refresh the page.</div>';
+            }
+        }
+
+        let currentTab1 = 'pitching';
+        let stage1Sort = { field: null, dir: 'asc' };
+
+        const pitchingStats1 = ['Innings pitched', 'Wins', 'Losses', 'Saves', 'ERA', 'Strikeouts', 'Walks', 'Complete games', 'Batting average against'];
+        const hittingStats1  = ['Batting average', 'On-base percentage', 'Slugging percentage', 'Total hits', 'Doubles', 'Triples', 'Home runs', 'Runs scored', 'RBIs', 'Stolen bases', 'Caught stealing'];
+
+        const EXCLUDED_FIELDS = new Set(['Timestamp', 'Email Address', 'Coach', 'I want to nominate a player from my team', "Player of the Year nomination", 'I confirm that I entered slugging percentage in the above box, not OPS']);
+
+        function renderCandidates() {
+            const search = document.getElementById('search1').value.toLowerCase();
+            const isPitching = currentTab1 === 'pitching';
+            const stats = isPitching ? pitchingStats1 : hittingStats1;
+            const bodyId = isPitching ? 'pitchingBody1' : 'hittingBody1';
+            const tbody = document.getElementById(bodyId);
+            tbody.innerHTML = '';
+
+            let filtered = playerOfYearCandidates.filter(p =>
+                p["Player's name"]?.toLowerCase().includes(search) ||
+                p['School']?.toLowerCase().includes(search)
+            );
+
+            // Sort: stat column if active, otherwise school then name
+            filtered.sort((a, b) => {
+                if (stage1Sort.field) {
+                    const av = parseFloat(a[stage1Sort.field]) || 0;
+                    const bv = parseFloat(b[stage1Sort.field]) || 0;
+                    if (av === 0 && bv !== 0) return 1;
+                    if (bv === 0 && av !== 0) return -1;
+                    return stage1Sort.dir === 'asc' ? av - bv : bv - av;
+                }
+                const schoolCmp = (a['School'] || '').localeCompare(b['School'] || '');
+                if (schoolCmp !== 0) return schoolCmp;
+                return (a["Player's name"] || '').localeCompare(b["Player's name"] || '');
+            });
+
+            // No position filter — show all players on both tabs
+
+            if (filtered.length === 0) {
+                const colspan = stats.length + 4;
+                tbody.innerHTML = `<tr><td colspan="${colspan}" class="px-4 py-6 text-center text-gray-500">No candidates match your search</td></tr>`;
+                return;
+            }
+
+            filtered.forEach(player => {
+                const isSelected = selectedPlayerOfYear?.["Player's name"] === player["Player's name"];
+                const row = document.createElement('tr');
+                row.className = isSelected ? 'bg-blue-50' : '';
+
+                const statCells = stats.map(s => `<td class="px-4 py-3 text-center text-sm text-gray-700">${player[s] ?? 'N/A'}</td>`).join('');
+                const allConfVal = player['All-conference awards this year'];
+                const allConf = allConfVal
+                    ? `<span class="text-sm text-gray-700">${allConfVal}</span>`
+                    : '<span class="text-gray-400">—</span>';
+
+                row.innerHTML = `
+                    <td class="px-4 py-3 text-center">
+                        <input type="radio" name="playerOfYear" class="w-4 h-4 text-blue-600 cursor-pointer" ${isSelected ? 'checked' : ''}>
+                    </td>
+                    <td class="px-4 py-3 text-sm font-medium text-gray-900 whitespace-nowrap">${player["Player's name"] || 'N/A'}</td>
+                    <td class="px-4 py-3 text-sm text-gray-700 whitespace-nowrap">${player['School'] || 'N/A'}</td>
+                    <td class="px-4 py-3 text-sm">${allConf}</td>
+                    ${statCells}
+                    <td class="px-4 py-3 text-center">
+                        <button class="details-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded text-xs font-medium">View more</button>
+                    </td>
+                `;
+
+                row.querySelector('input[type=radio]').addEventListener('change', () => selectPlayerOfYear(player));
+                row.querySelector('.details-btn').addEventListener('click', () => openPlayerModal(player));
+                tbody.appendChild(row);
+            });
+
+            // Update sort indicators
+            document.querySelectorAll('#pitchingTab1 th[data-stat1], #hittingTab1 th[data-stat1]').forEach(th => {
+                const arrow = th.querySelector('.sort-arrow');
+                if (!arrow) return;
+                if (stage1Sort.field === th.dataset.stat1) {
+                    arrow.textContent = stage1Sort.dir === 'asc' ? '▲' : '▼';
+                    arrow.style.opacity = '1';
+                    th.style.color = '#1d4ed8';
+                } else {
+                    arrow.textContent = '▲';
+                    arrow.style.opacity = '0.3';
+                    th.style.color = '';
+                }
+            });
+        }
+
+        function switchTab1(tab) {
+            currentTab1 = tab;
+            document.getElementById('tabPitching1').className = tab === 'pitching' ? 'tab-button active px-6 py-2 rounded-lg font-semibold' : 'tab-button inactive px-6 py-2 rounded-lg font-semibold';
+            document.getElementById('tabHitting1').className  = tab === 'hitting'  ? 'tab-button active px-6 py-2 rounded-lg font-semibold' : 'tab-button inactive px-6 py-2 rounded-lg font-semibold';
+            document.getElementById('pitchingTab1').style.display = tab === 'pitching' ? 'block' : 'none';
+            document.getElementById('hittingTab1').style.display  = tab === 'hitting'  ? 'block' : 'none';
+            renderCandidates();
+        }
+
+        function selectPlayerOfYear(player) {
+            selectedPlayerOfYear = player;
+            document.getElementById('submitStage1').disabled = false;
+            document.getElementById('selectedPlayerName1').textContent = player["Player's name"];
+            document.getElementById('selectedPlayerSchool1').textContent = player['School'];
+            document.getElementById('selectedPlayer1').style.display = 'block';
+            renderCandidates();
+        }
+
+        function searchCandidates() {
+            renderCandidates();
+        }
+
+        function openPlayerModal(player) {
+            document.getElementById('modalPlayerName').textContent = player["Player's name"] + ' — ' + (player['School'] || '');
+            const body = document.getElementById('modalBody');
+            body.innerHTML = '';
+            Object.entries(player).forEach(([key, val]) => {
+                if (EXCLUDED_FIELDS.has(key) || key === "Player's name" || key === 'School' || val === null || val === undefined || val === '' || val === 0 || val === '0') return;
+                const row = document.createElement('div');
+                row.className = 'flex gap-2 text-sm border-b border-gray-100 pb-2';
+                row.innerHTML = `<span class="font-medium text-gray-600 min-w-max">${key}:</span><span class="text-gray-900">${val}</span>`;
+                body.appendChild(row);
+            });
+            const modal = document.getElementById('playerModal');
+            modal.style.display = 'flex';
+        }
+
+        function closePlayerModal() {
+            document.getElementById('playerModal').style.display = 'none';
+        }
+
+        async function submitStage1() {
+            if (!selectedPlayerOfYear) return;
+
+            // Hide stage 1, show stage 2
+            document.getElementById('stage1').classList.add('stage-hidden');
+            document.getElementById('stage2').classList.remove('stage-hidden');
+
+            // Initialize stage 2
+            initStage2();
+        }
+
+        // ==================== STAGE 2: ALL-STAR RANKINGS ====================
+        async function initStage2() {
+            try {
+                const loading = document.getElementById('loading2');
+                loading.style.display = 'flex';
+
+                // Filter out Player of Year and set up ranking players
+                rankingPlayers = allPlayers.filter(p => 
+                    p["Player's name"] !== selectedPlayerOfYear["Player's name"]
+                );
+
+                // Initialize rankings array (empty until coaches select players)
+                currentRankings = JSON.parse(localStorage.getItem('currentRankings')) || [];
+
+                // Tab switching
+                document.getElementById('tabPitching').addEventListener('click', () => switchTab('pitching'));
+                document.getElementById('tabHitting').addEventListener('click', () => switchTab('hitting'));
+
+                // Search
+                document.getElementById('search2').addEventListener('input', filterPlayers);
+
+                // Submit votes
+                document.getElementById('continueToStage3').addEventListener('click', () => {
+                    if (currentRankings.length !== 22) {
+                        alert('You must rank exactly 22 players before continuing.');
+                        return;
+                    }
+                    document.getElementById('stage2').classList.add('stage-hidden');
+                    document.getElementById('stage3').classList.remove('stage-hidden');
+                    initStage3();
+                });
+
+                // Wire sort headers once
+                document.querySelectorAll('#pitchingTab th[data-stat2], #hittingTab th[data-stat2]').forEach(th => {
+                    th.addEventListener('click', () => {
+                        const f = th.dataset.stat2;
+                        if (stage2Sort.field === f) {
+                            stage2Sort.dir = stage2Sort.dir === 'asc' ? 'desc' : 'asc';
+                        } else {
+                            stage2Sort.field = f;
+                            stage2Sort.dir = 'asc';
+                        }
+                        renderPlayerTable();
+                    });
+                });
+
+                // Render initial table
+                currentTab = 'pitching';
+                renderPlayerTable();
+
+                loading.style.display = 'none';
+
+            } catch (error) {
+                console.error('Error initializing Stage 2:', error);
+                document.getElementById('loading2').innerHTML = '<div class="text-red-600">Error loading players. Please refresh the page.</div>';
+            }
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+
+            // Update button styles
+            const btnPitching = document.getElementById('tabPitching');
+            const btnHitting = document.getElementById('tabHitting');
+
+            if (tab === 'pitching') {
+                btnPitching.classList.remove('inactive');
+                btnPitching.classList.add('active');
+                btnHitting.classList.remove('active');
+                btnHitting.classList.add('inactive');
+                document.getElementById('pitchingTab').style.display = 'block';
+                document.getElementById('hittingTab').style.display = 'none';
+            } else {
+                btnHitting.classList.remove('inactive');
+                btnHitting.classList.add('active');
+                btnPitching.classList.remove('active');
+                btnPitching.classList.add('inactive');
+                document.getElementById('pitchingTab').style.display = 'none';
+                document.getElementById('hittingTab').style.display = 'block';
+            }
+
+            renderPlayerTable();
+        }
+
+        function renderPlayerTable() {
+            const isPitching = currentTab === 'pitching';
+            const tableBody = isPitching ?
+                document.getElementById('pitchingTableBody') :
+                document.getElementById('hittingTableBody');
+
+            tableBody.innerHTML = '';
+
+            let displayPlayers = rankingPlayers.filter(p => {
+                const search = document.getElementById('search2').value.toLowerCase();
+                return p["Player's name"]?.toLowerCase().includes(search) ||
+                       p['School']?.toLowerCase().includes(search);
+            });
+
+            // Sort by active stat, else school then name
+            if (stage2Sort.field) {
+                displayPlayers.sort((a, b) => {
+                    const av = parseFloat(a[stage2Sort.field]) || 0;
+                    const bv = parseFloat(b[stage2Sort.field]) || 0;
+                    if (av === 0 && bv !== 0) return 1;
+                    if (bv === 0 && av !== 0) return -1;
+                    return stage2Sort.dir === 'asc' ? av - bv : bv - av;
+                });
+            } else {
+                displayPlayers.sort((a, b) => {
+                    const sc = (a['School'] || '').localeCompare(b['School'] || '');
+                    if (sc !== 0) return sc;
+                    return (a["Player's name"] || '').localeCompare(b["Player's name"] || '');
+                });
+            }
+
+            const rankedNames = new Set(currentRankings.map(r => r.playerName));
+
+            displayPlayers.forEach((player) => {
+                const stats = isPitching ? pitchingStats : hittingStats;
+                const isRanked = rankedNames.has(player["Player's name"]);
+
+                const row = document.createElement('tr');
+                row.dataset.playerName = player["Player's name"];
+                if (isRanked) row.style.opacity = '0.4';
+
+                let statsCells = stats.map(stat => {
+                    const value = player[stat] ?? 'N/A';
+                    return `<td class="px-4 py-3 text-center text-sm text-gray-700">${value}</td>`;
+                }).join('');
+
+                const allConfVal = player['All-conference awards this year'];
+                const allConf = allConfVal
+                    ? `<span class="text-sm text-gray-700">${allConfVal}</span>`
+                    : '<span class="text-gray-400">—</span>';
+
+                row.innerHTML = `
+                    <td class="px-4 py-3 text-center text-sm">
+                        ${isRanked
+                            ? `<span class="text-gray-400 text-xs">Added</span>`
+                            : `<button class="add-btn bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded text-xs font-medium" ${currentRankings.length >= 22 ? 'disabled style="opacity:0.4;cursor:not-allowed"' : ''}>+ Add</button>`
+                        }
+                    </td>
+                    <td class="px-4 py-3 text-sm font-medium text-gray-900 whitespace-nowrap">${player["Player's name"] || 'N/A'}</td>
+                    <td class="px-4 py-3 text-sm text-gray-700 whitespace-nowrap">${player['School'] || 'N/A'}</td>
+                    <td class="px-4 py-3 text-sm">${allConf}</td>
+                    ${statsCells}
+                    <td class="px-4 py-3 text-center">
+                        <button class="details-btn bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded text-xs font-medium">View more</button>
+                    </td>
+                `;
+
+                const addBtn = row.querySelector('.add-btn');
+                const detailsBtn = row.querySelector('.details-btn');
+                if (addBtn) addBtn.addEventListener('click', () => addPlayerToRanking(player));
+                if (detailsBtn) detailsBtn.addEventListener('click', () => openPlayerModal(player));
+
+                tableBody.appendChild(row);
+            });
+
+            // Update sort indicators
+            document.querySelectorAll('#pitchingTab th[data-stat2], #hittingTab th[data-stat2]').forEach(th => {
+                const arrow = th.querySelector('.sort-arrow2');
+                if (!arrow) return;
+                if (stage2Sort.field === th.dataset.stat2) {
+                    arrow.textContent = stage2Sort.dir === 'asc' ? '▲' : '▼';
+                    arrow.style.opacity = '1';
+                    th.style.color = '#7c3aed';
+                } else {
+                    arrow.textContent = '▲';
+                    arrow.style.opacity = '0.3';
+                    th.style.color = '';
+                }
+            });
+
+            updateRankingCount();
+            renderRankedList();
+        }
+
+        function addPlayerToRanking(player) {
+            if (currentRankings.length >= 22) return;
+            if (currentRankings.find(r => r.playerName === player["Player's name"])) return;
+            currentRankings.push({
+                playerName: player["Player's name"],
+                school: player['School'],
+                position: player['Primary position'],
+                rank: currentRankings.length + 1
+            });
+            saveRankings();
+            renderPlayerTable();
+        }
+
+        function removePlayerFromRanking(playerName) {
+            currentRankings = currentRankings.filter(r => r.playerName !== playerName);
+            currentRankings.forEach((r, idx) => r.rank = idx + 1);
+            saveRankings();
+            renderPlayerTable();
+        }
+
+        let currentRankedTab = 'pitching';
+
+        function switchRankedTab(tab) {
+            currentRankedTab = tab;
+            document.getElementById('tabRankedPitching').className = tab === 'pitching' ? 'tab-button active px-6 py-2 rounded-lg font-semibold' : 'tab-button inactive px-6 py-2 rounded-lg font-semibold';
+            document.getElementById('tabRankedHitting').className  = tab === 'hitting'  ? 'tab-button active px-6 py-2 rounded-lg font-semibold' : 'tab-button inactive px-6 py-2 rounded-lg font-semibold';
+            document.getElementById('rankedPitchingTab').style.display = tab === 'pitching' ? 'block' : 'none';
+            document.getElementById('rankedHittingTab').style.display  = tab === 'hitting'  ? 'block' : 'none';
+            renderRankedList();
+        }
+
+        function renderRankedList() {
+            const empty = document.getElementById('rankedEmpty');
+            const pitchBody = document.getElementById('rankedPitchingBody');
+            const hitBody   = document.getElementById('rankedHittingBody');
+            pitchBody.innerHTML = '';
+            hitBody.innerHTML   = '';
+
+            if (currentRankings.length === 0) {
+                empty.style.display = 'block';
+                return;
+            }
+            empty.style.display = 'none';
+
+            currentRankings.forEach((r, idx) => {
+                // Look up full player object
+                const player = rankingPlayers.find(p => p["Player's name"] === r.playerName) || {};
+
+                [pitchBody, hitBody].forEach((tbody, tabIdx) => {
+                    const stats = tabIdx === 0 ? pitchingStats : hittingStats;
+                    const row = document.createElement('tr');
+
+                    const statCells = stats.map(s => `<td class="px-4 py-3 text-center text-sm text-gray-700">${player[s] ?? 'N/A'}</td>`).join('');
+                    const allConfVal = player['All-conference awards this year'];
+                    const allConf = allConfVal ? `<span class="text-sm text-gray-700">${allConfVal}</span>` : '<span class="text-gray-400">—</span>';
+                    const isFirst = idx === 0;
+                    const isLast  = idx === currentRankings.length - 1;
+
+                    row.innerHTML = `
+                        <td class="px-4 py-3 text-center whitespace-nowrap">
+                            <div class="flex items-center justify-center gap-1">
+                                <button class="up-ranked bg-purple-600 text-white px-2 py-1 rounded text-xs hover:bg-purple-700 ${isFirst ? 'opacity-30 cursor-not-allowed' : ''}" ${isFirst ? 'disabled' : ''}>▲</button>
+                                <span class="font-semibold text-purple-700 text-sm w-5 text-center">${idx + 1}</span>
+                                <button class="down-ranked bg-purple-600 text-white px-2 py-1 rounded text-xs hover:bg-purple-700 ${isLast ? 'opacity-30 cursor-not-allowed' : ''}" ${isLast ? 'disabled' : ''}>▼</button>
+                            </div>
+                        </td>
+                        <td class="px-4 py-3 text-sm font-medium text-gray-900 whitespace-nowrap">${r.playerName}</td>
+                        <td class="px-4 py-3 text-sm text-gray-700 whitespace-nowrap">${r.school}</td>
+                        <td class="px-4 py-3 text-sm">${allConf}</td>
+                        ${statCells}
+                        <td class="px-4 py-3 text-center">
+                            <button class="details-ranked bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded text-xs font-medium">View more</button>
+                        </td>
+                        <td class="px-4 py-3 text-center">
+                            <button class="remove-ranked text-red-400 hover:text-red-600 text-lg leading-none font-bold">&times;</button>
+                        </td>
+                    `;
+
+                    row.querySelector('.up-ranked').addEventListener('click', () => {
+                        if (idx === 0) return;
+                        [currentRankings[idx], currentRankings[idx - 1]] = [currentRankings[idx - 1], currentRankings[idx]];
+                        currentRankings.forEach((r, i) => r.rank = i + 1);
+                        saveRankings();
+                        renderRankedList();
+                        renderPlayerTable();
+                    });
+                    row.querySelector('.down-ranked').addEventListener('click', () => {
+                        if (idx === currentRankings.length - 1) return;
+                        [currentRankings[idx], currentRankings[idx + 1]] = [currentRankings[idx + 1], currentRankings[idx]];
+                        currentRankings.forEach((r, i) => r.rank = i + 1);
+                        saveRankings();
+                        renderRankedList();
+                        renderPlayerTable();
+                    });
+                    row.querySelector('.remove-ranked').addEventListener('click', () => removePlayerFromRanking(r.playerName));
+                    row.querySelector('.details-ranked').addEventListener('click', () => openPlayerModal(player));
+
+                    tbody.appendChild(row);
+                });
+            });
+        }
+
+        function filterPlayers() {
+            renderPlayerTable();
+        }
+
+        function updateRankingCount() {
+            document.getElementById('rankedCount').textContent = currentRankings.length;
+        }
+
+        function saveRankings() {
+            localStorage.setItem('currentRankings', JSON.stringify(currentRankings));
+            clearTimeout(saveTimer);
+            document.getElementById('saveStatus').textContent = '✓ Saved';
+            document.getElementById('saveStatus').className = 'text-green-600';
+            
+            saveTimer = setTimeout(() => {
+                document.getElementById('saveStatus').textContent = 'Auto-saving...';
+                document.getElementById('saveStatus').className = 'text-gray-500';
+            }, 3000);
+        }
+
+        async function submitVotes() {
+            if (!selectedCoachOfYear) {
+                alert('Please select a Coach of the Year.');
+                return;
+            }
+
+            try {
+                const voteData = {
+                    coach: `${coachName}, ${coachSchool}`,
+                    playerOfYear: selectedPlayerOfYear["Player's name"],
+                    playerOfYearSchool: selectedPlayerOfYear['School'],
+                    coachOfYear: `${selectedCoachOfYear.name}, ${selectedCoachOfYear.school}`,
+                    rankings: currentRankings,
+                    timestamp: new Date().toISOString()
+                };
+
+                const response = await fetch(GOOGLE_SHEET_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(voteData)
+                });
+
+                if (response.ok) {
+                    localStorage.removeItem('currentRankings');
+                    // Hide all stages, show thank you page
+                    ['stage0','stage1','stage2','stage3'].forEach(id => {
+                        const el = document.getElementById(id);
+                        if (el) el.classList.add('stage-hidden');
+                    });
+                    document.getElementById('siteHeader').classList.add('stage-hidden');
+                    document.getElementById('thankYouPage').style.display = 'flex';
+                } else {
+                    alert('Error submitting votes. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error submitting votes:', error);
+                alert('Error submitting votes. Please check your connection and try again.');
+            }
+        }
+
+        // ==================== STAGE 3: COACH OF THE YEAR ====================
+        async function initStage3() {
+            try {
+                document.getElementById('loading3').style.display = 'flex';
+                document.getElementById('content3').style.display = 'none';
+
+                const response = await fetch(coachDataUrl);
+                const data = await response.json();
+                allCoaches = Array.isArray(data) ? data : (data.data || data.coaches || Object.values(data).find(v => Array.isArray(v)) || []);
+
+                document.getElementById('loading3').style.display = 'none';
+                if (allCoaches.length === 0) {
+                    document.getElementById('noResults3').style.display = 'block';
+                } else {
+                    document.getElementById('content3').style.display = 'block';
+                    renderCoachTable();
+                }
+
+                document.getElementById('submitVotes').addEventListener('click', submitVotes);
+
+            } catch (error) {
+                console.error('Error loading coaches:', error);
+                document.getElementById('loading3').innerHTML = '<div class="text-red-600">Error loading coaches. Please refresh.</div>';
+            }
+        }
+
+        function renderCoachTable() {
+            const tbody = document.getElementById('coachTableBody');
+            tbody.innerHTML = '';
+
+            let filtered = allCoaches.filter(c =>
+                (c['Base/soft'] || '').toLowerCase() === COACH_SPORT.toLowerCase() &&
+                (c['class'] || '') === COACH_CLASS
+            );
+
+            filtered.sort((a, b) => (a['school'] || '').localeCompare(b['school'] || '') || (a['name'] || '').localeCompare(b['name'] || ''));
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="2" class="px-4 py-6 text-center text-gray-500">No coaches found for this classification</td></tr>';
+                return;
+            }
+
+            filtered.forEach(coach => {
+                const isSelected = selectedCoachOfYear?.name === coach['name'] && selectedCoachOfYear?.school === coach['school'];
+                const row = document.createElement('tr');
+                if (isSelected) row.className = 'bg-green-50';
+
+                row.innerHTML = `
+                    <td class="px-4 py-3 text-center">
+                        <input type="radio" name="coachOfYear" class="w-4 h-4 text-green-600 cursor-pointer" ${isSelected ? 'checked' : ''}>
+                    </td>
+                    <td class="px-4 py-3 text-sm font-medium text-gray-900">${coach['name'] || 'N/A'}, ${coach['school'] || 'N/A'}</td>
+
+                `;
+
+                row.querySelector('input[type=radio]').addEventListener('change', () => {
+                    selectedCoachOfYear = { name: coach['name'], school: coach['school'] };
+                    document.getElementById('selectedCoachName3').textContent = `${coach['name']}, ${coach['school']}`;
+                    document.getElementById('selectedCoach3').style.display = 'block';
+                    document.getElementById('submitVotes').disabled = false;
+                    renderCoachTable();
+                });
+
+                tbody.appendChild(row);
+            });
+        }
+
+        // ==================== UTILITIES ====================
+        async function fetchPlayerData() {
+            try {
+                console.log('Fetching data from:', dataUrl);
+                const response = await fetch(dataUrl);
+                console.log('Response status:', response.status);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log('Raw data received:', data);
+                console.log('Data type:', typeof data);
+                console.log('Is array?', Array.isArray(data));
+                
+                // Handle different response structures
+                let players = data;
+                
+                // If data is an object with an array property, extract it
+                if (data && typeof data === 'object' && !Array.isArray(data)) {
+                    // Try common property names
+                    if (data.data && Array.isArray(data.data)) {
+                        console.log('✓ Extracting from data.data property');
+                        players = data.data;
+                    } else if (data.players && Array.isArray(data.players)) {
+                        console.log('✓ Extracting from data.players property');
+                        players = data.players;
+                    } else if (data.results && Array.isArray(data.results)) {
+                        console.log('✓ Extracting from data.results property');
+                        players = data.results;
+                    } else {
+                        // If we can't find an array, get the first array property
+                        for (let key in data) {
+                            if (Array.isArray(data[key])) {
+                                console.log('✓ Found array at key:', key);
+                                players = data[key];
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+                if (!Array.isArray(players)) {
+                    console.error('❌ Could not extract array from data');
+                    throw new Error('Response data is not an array and could not find array property');
+                }
+                
+                console.log('✓ Data loaded successfully:', players.length, 'players');
+                console.log('First player sample:', players[0]);
+                return players;
+            } catch (error) {
+                console.error('Detailed error fetching player data:', error);
+                console.error('Error message:', error.message);
+                throw error;
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initStage0);
+    </script>
+
+    <!-- Thank You Page -->
+    <div id="thankYouPage" style="display:none; position:fixed; inset:0; background:white; z-index:100; align-items:center; justify-content:center;">
+        <div class="text-center">
+            <div class="text-6xl mb-6">🥎</div>
+            <h2 class="text-4xl font-bold text-gray-900 mb-4">Thank you for voting.</h2>
+            <p class="text-gray-500 text-lg">Your ballot has been submitted.</p>
+        </div>
+    </div>
+</body>
+</html>
